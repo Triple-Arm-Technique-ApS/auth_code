@@ -17,7 +17,7 @@ class IdentityServer {
 
   Future<void> init() async {
     final endpoint = authority.resolveUri(
-      Uri.parse('/.well-known/openid-configuration'),
+      Uri.parse('.well-known/openid-configuration'),
     );
     final response = await http.get(endpoint);
     if (response.statusCode < 200 && response.statusCode > 299) {

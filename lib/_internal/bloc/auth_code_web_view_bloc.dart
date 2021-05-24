@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:auth_code_view/_internal/core/core.dart';
+import 'package:auth_code_view/core/core.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:oauth2/oauth2.dart';
