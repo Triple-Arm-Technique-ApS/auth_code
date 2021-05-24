@@ -56,4 +56,7 @@ class AuthCodeManager {
     }
     return await _identityServer.getUserInfo(_client!.credentials.accessToken);
   }
+
+  bool get hasUserInfoEndpoint =>
+      _identityServer.discoveryDocument?.userinfoEndpoint != null;
 }

@@ -31,8 +31,12 @@ class IdentityServer {
     if (_discoveryDocument == null) {
       await init();
     }
+
+    if (_discoveryDocument?.userinfoEndpoint == null) {
+      throw Exception('No user info endpoint found in discovery document.');
+    }
     final response =
-        await http.get(_discoveryDocument!.userinfoEndpoint, headers: {
+        await http.get(_discoveryDocument!.userinfoEndpoint!, headers: {
       'Authorization': 'Bearer $accessToken',
       'Content-Type': 'application/json',
     });

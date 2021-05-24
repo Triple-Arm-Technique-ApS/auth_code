@@ -50,12 +50,14 @@ class AuthCodeWebViewBloc
       }
     }
     if (event is UserInfoRequestedEvent) {
-      yield FetchingUserInfo();
-      try {
-        final user = await authCodeManager.getUserInfo();
-        yield FetchingUserInfoSucceeded(user);
-      } catch (_) {
-        yield FetchingDiscoveryDocumentFailed();
+      if (authCodeManager.hasUserInfoEndpoint) {
+        yield FetchingUserInfo();
+        try {
+          final user = await authCodeManager.getUserInfo();
+          yield FetchingUserInfoSucceeded(user);
+        } catch (_) {
+          yield FetchingDiscoveryDocumentFailed();
+        }
       }
     }
   }

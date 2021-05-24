@@ -1,5 +1,6 @@
 library auth_code_view;
 
+export 'core/core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oauth2/oauth2.dart';
@@ -28,7 +29,7 @@ class AuthCodeView extends StatelessWidget {
   final void Function() onCancelled;
   final void Function(AuthCodeWebViewError) onError;
   final void Function(Credentials credentials) onCredentials;
-  final void Function(Map<String, dynamic> user) onUserInfo;
+  final void Function(Map<String, dynamic> user)? onUserInfo;
   const AuthCodeView({
     Key? key,
     required this.authority,
@@ -38,7 +39,7 @@ class AuthCodeView extends StatelessWidget {
     required this.onCancelled,
     required this.onError,
     required this.onCredentials,
-    required this.onUserInfo,
+    this.onUserInfo,
   }) : super(key: key);
 
   @override
@@ -70,7 +71,7 @@ class AuthCodeView extends StatelessWidget {
           }
 
           if (state is FetchingUserInfoSucceeded) {
-            onUserInfo(state.user);
+            onUserInfo?.call(state.user);
           }
         },
         builder: (context, state) {
