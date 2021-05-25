@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:html' as html;
-
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -42,17 +42,7 @@ class ExternalBrowserWindow {
   });
 
   Future<void> open() async {
-    String opt = options;
-    if (center) {
-      int? screenWidth = html.window.screen?.width;
-      int? screenHeight = html.window.screen?.height;
-      if (screenWidth != null && screenHeight != null) {
-        double newLeft = (screenWidth - width) / 2;
-        double newTop = (screenHeight - height) / 4;
-        opt = _buildOptions(newLeft as int, newTop as int);
-      }
-    }
-    final window = html.window.open(url.toString(), title, opt);
+    final window = html.window.open(url.toString(), title, options);
     StreamSubscription<html.MessageEvent>? subscription;
     bool skipEvent = false;
     if (onMessage != null) {
@@ -76,9 +66,36 @@ class ExternalBrowserWindow {
     }
   }
 
+  math.Point<int> getPoint() {
+    if (center) {
+      int? screenLeft = html.window.screenLeft ?? html.window.screenX;
+      int? screenTop = html.window.screenTop ?? html.window.screenY;
+      int? screenWidth = html.window.innerWidth ??
+          html.document.documentElement?.clientWidth ??
+          html.window.screen?.width;
+      int? screenHeight = html.window.innerHeight ??
+          html.document.documentElement?.clientHeight ??
+          html.window.screen?.height;
+
+      if (screenLeft != null &&
+          screenTop != null &&
+          screenWidth != null &&
+          screenHeight != null) {
+        final left = (screenWidth - width) / 2;
+        final top = (screenHeight - height) / 2;
+        return math.Point<int>(left.toInt(), top.toInt());
+      }
+    }
+    return math.Point(left, top);
+  }
+
   String _buildOptions(int left, int top) =>
       'scrollbars=${boolToYesOrNo(hasScrollbars)},resizable=${boolToYesOrNo(isResizable)},status=${boolToYesOrNo(hasStatusBar)},location=${boolToYesOrNo(hasLocationbar)},toolbar=${boolToYesOrNo(hasToolbar)},menubar=${boolToYesOrNo(hasMenubar)},width=$width,height=$height,left=$left,top=$top';
-  String get options => _buildOptions(left, top);
+
+  String get options {
+    final point = getPoint();
+    return _buildOptions(point.x, point.y);
+  }
 
   String boolToYesOrNo(bool value) => value ? 'yes' : 'no';
 
@@ -121,12 +138,14 @@ class AuthCodeSimplified extends StatefulWidget {
   final bool Function(Uri uri) callbackHandler;
   final void Function() onCancelled;
   final void Function() onError;
+  final Widget? child;
   const AuthCodeSimplified({
     Key? key,
     required this.authorizationEndpoint,
     required this.callbackHandler,
     required this.onCancelled,
     required this.onError,
+    this.child,
   }) : super(key: key);
 
   @override
@@ -159,6 +178,8 @@ class _AuthCodeSimplifiedState extends State<AuthCodeSimplified> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: widget.child,
+    );
   }
 }
