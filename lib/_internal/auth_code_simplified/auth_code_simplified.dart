@@ -7,13 +7,15 @@ class AuthCodeSimplified extends StatelessWidget {
   final bool Function(Uri uri) callbackHandler;
   final void Function() onCancelled;
   final void Function() onError;
-  const AuthCodeSimplified({
-    Key? key,
-    required this.authorizationEndpoint,
-    required this.callbackHandler,
-    required this.onCancelled,
-    required this.onError,
-  }) : super(key: key);
+  final Widget? child;
+  const AuthCodeSimplified(
+      {Key? key,
+      required this.authorizationEndpoint,
+      required this.callbackHandler,
+      required this.onCancelled,
+      required this.onError,
+      this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
