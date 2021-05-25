@@ -45,8 +45,16 @@ class AuthCodeWebViewBloc
         final credentials = await authCodeManager
             .createCredentialsFromCallback(event.callbackurl);
         yield HandlingCallbackSucceeded(credentials);
+      } on AuthorizationException catch (authException) {
+        yield HandlingCallbackFailed(
+          error: authException.error,
+          description: authException.description,
+          uri: authException.uri,
+        );
+      } on FormatException catch (formatException) {
+        yield HandlingCallbackFailed(error: formatException.message);
       } catch (_) {
-        yield HandlingCallbackFailed();
+        yield HandlingCallbackFailed(error: 'Unexpected');
       }
     }
     if (event is UserInfoRequestedEvent) {

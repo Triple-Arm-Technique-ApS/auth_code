@@ -19,7 +19,27 @@ class DiscoveryDocumentError extends AuthCodeWebViewError {}
 
 class UserInfoError extends AuthCodeWebViewError {}
 
-class CallbackError extends AuthCodeWebViewError {}
+class CallbackError extends AuthCodeWebViewError {
+  /// The name of the error.
+  ///
+  /// Possible names are enumerated in [the spec][].
+  ///
+  /// [the spec]: http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.2
+  final String error;
+
+  /// The description of the error, provided by the server.
+  ///
+  /// May be `null` if the server provided no description.
+  final String? description;
+
+  /// A URL for a page that describes the error in more detail, provided by the
+  /// server.
+  ///
+  /// May be `null` if the server provided no URL.
+  final Uri? uri;
+
+  CallbackError(this.error, this.description, this.uri);
+}
 
 class AuthCodeView extends StatelessWidget {
   final Uri authority;
@@ -62,7 +82,7 @@ class AuthCodeView extends StatelessWidget {
           }
 
           if (state is HandlingCallbackFailed) {
-            onError(CallbackError());
+            onError(CallbackError(state.error, state.description, state.uri));
           }
 
           if (state is HandlingCallbackSucceeded) {
