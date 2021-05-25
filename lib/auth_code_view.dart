@@ -82,7 +82,13 @@ class AuthCodeView extends StatelessWidget {
           }
 
           if (state is HandlingCallbackFailed) {
-            onError(CallbackError(state.error, state.description, state.uri));
+            // Check for Azure AD status code.
+            if (state.description != null &&
+                state.description!.contains('AADB2C90091')) {
+              onCancelled();
+            } else {
+              onError(CallbackError(state.error, state.description, state.uri));
+            }
           }
 
           if (state is HandlingCallbackSucceeded) {
