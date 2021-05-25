@@ -18,6 +18,7 @@ class ExternalBrowserWindow {
   final void Function() onClosed;
   final Uri url;
   final String title;
+  final bool center;
   final void Function(
     html.MessageEvent event,
     void Function() close,
@@ -31,16 +32,27 @@ class ExternalBrowserWindow {
     this.hasMenubar = false,
     this.left = 300,
     this.top = 300,
-    this.width = 360,
-    this.height = 600,
+    this.width = 420,
+    this.height = 700,
     this.onMessage,
+    this.center = true,
     required this.onClosed,
     required this.url,
     required this.title,
   });
 
   Future<void> open() async {
-    final window = html.window.open(url.toString(), title, options);
+    String opt = options;
+    if (center) {
+      int? screenWidth = html.window.screen?.width;
+      int? screenHeight = html.window.screen?.height;
+      if (screenWidth != null && screenHeight != null) {
+        double newLeft = (screenWidth - width) / 2;
+        double newTop = (screenHeight - height) / 4;
+        opt = _buildOptions(newLeft as int, newTop as int);
+      }
+    }
+    final window = html.window.open(url.toString(), title, opt);
     StreamSubscription<html.MessageEvent>? subscription;
     bool skipEvent = false;
     if (onMessage != null) {
@@ -64,8 +76,10 @@ class ExternalBrowserWindow {
     }
   }
 
-  String get options =>
+  String _buildOptions(int left, int top) =>
       'scrollbars=${boolToYesOrNo(hasScrollbars)},resizable=${boolToYesOrNo(isResizable)},status=${boolToYesOrNo(hasStatusBar)},location=${boolToYesOrNo(hasLocationbar)},toolbar=${boolToYesOrNo(hasToolbar)},menubar=${boolToYesOrNo(hasMenubar)},width=$width,height=$height,left=$left,top=$top';
+  String get options => _buildOptions(left, top);
+
   String boolToYesOrNo(bool value) => value ? 'yes' : 'no';
 
   factory ExternalBrowserWindow.open({
