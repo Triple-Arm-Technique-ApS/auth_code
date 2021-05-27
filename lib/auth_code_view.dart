@@ -50,17 +50,19 @@ class AuthCodeView extends StatelessWidget {
   final void Function(AuthCodeWebViewError) onError;
   final void Function(Credentials credentials) onCredentials;
   final void Function(Map<String, dynamic> user)? onUserInfo;
-  const AuthCodeView({
-    Key? key,
-    required this.authority,
-    required this.clientId,
-    required this.scopes,
-    required this.redirectUri,
-    required this.onCancelled,
-    required this.onError,
-    required this.onCredentials,
-    this.onUserInfo,
-  }) : super(key: key);
+  final Uri Function(Uri)? authorizeEndpointTransformer;
+  const AuthCodeView(
+      {Key? key,
+      required this.authority,
+      required this.clientId,
+      required this.scopes,
+      required this.redirectUri,
+      required this.onCancelled,
+      required this.onError,
+      required this.onCredentials,
+      this.onUserInfo,
+      this.authorizeEndpointTransformer})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,7 @@ class AuthCodeView extends StatelessWidget {
         clientId: clientId,
         scopes: scopes,
         redirectCallbackUrl: redirectUri,
+        authorizeEndpointTransformer: authorizeEndpointTransformer,
       )..add(DiscoveryDocumentRequestedEvent()),
       child: BlocConsumer<AuthCodeWebViewBloc, AuthCodeWebViewState>(
         listener: (context, state) {
