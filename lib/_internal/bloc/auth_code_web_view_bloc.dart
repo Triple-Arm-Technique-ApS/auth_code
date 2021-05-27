@@ -14,13 +14,15 @@ class AuthCodeWebViewBloc
   final String clientId;
   final List<String> scopes;
   final Uri redirectCallbackUrl;
+  final Uri Function(Uri)? authorizeEndpointTransformer;
   late final AuthCodeManager authCodeManager = AuthCodeManager(authority);
-  AuthCodeWebViewBloc({
-    required this.authority,
-    required this.clientId,
-    required this.scopes,
-    required this.redirectCallbackUrl,
-  }) : super(AuthCodeWebViewInitial());
+  AuthCodeWebViewBloc(
+      {required this.authority,
+      required this.clientId,
+      required this.scopes,
+      required this.redirectCallbackUrl,
+      this.authorizeEndpointTransformer})
+      : super(AuthCodeWebViewInitial());
 
   @override
   Stream<AuthCodeWebViewState> mapEventToState(
@@ -34,7 +36,13 @@ class AuthCodeWebViewBloc
           scopes: scopes,
           redirectCallbackUrl: redirectCallbackUrl,
         );
-        yield FetchingDiscoveryDocumentSucceeded(authorizationEndpoint);
+        if (authorizeEndpointTransformer != null) {
+          yield FetchingDiscoveryDocumentSucceeded(
+            authorizeEndpointTransformer!(authorizationEndpoint),
+          );
+        } else {
+          yield FetchingDiscoveryDocumentSucceeded(authorizationEndpoint);
+        }
       } catch (_) {
         yield FetchingDiscoveryDocumentFailed();
       }
