@@ -51,6 +51,7 @@ class AuthCodeView extends StatelessWidget {
   final void Function(Credentials credentials) onCredentials;
   final void Function(Map<String, dynamic> user)? onUserInfo;
   final Uri Function(Uri)? authorizeEndpointTransformer;
+  final Widget? child;
   const AuthCodeView(
       {Key? key,
       required this.authority,
@@ -60,6 +61,7 @@ class AuthCodeView extends StatelessWidget {
       required this.onCancelled,
       required this.onError,
       required this.onCredentials,
+      this.child,
       this.onUserInfo,
       this.authorizeEndpointTransformer})
       : super(key: key);
@@ -118,6 +120,7 @@ class AuthCodeView extends StatelessWidget {
               },
               onCancelled: onCancelled,
               onError: () => onError(BrowserError()),
+              child: child,
             );
           }
           return Container();
