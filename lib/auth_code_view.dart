@@ -42,7 +42,7 @@ class CallbackError extends AuthCodeWebViewError {
 }
 
 class AuthCodeView extends StatelessWidget {
-  final Uri authority;
+  final Uri discoveryEndpoint;
   final String clientId;
   final List<String> scopes;
   final Uri redirectUri;
@@ -52,25 +52,25 @@ class AuthCodeView extends StatelessWidget {
   final void Function(Map<String, dynamic> user)? onUserInfo;
   final Uri Function(Uri)? authorizeEndpointTransformer;
   final Widget? child;
-  const AuthCodeView(
-      {Key? key,
-      required this.authority,
-      required this.clientId,
-      required this.scopes,
-      required this.redirectUri,
-      required this.onCancelled,
-      required this.onError,
-      required this.onCredentials,
-      this.child,
-      this.onUserInfo,
-      this.authorizeEndpointTransformer})
-      : super(key: key);
+  const AuthCodeView({
+    Key? key,
+    required this.discoveryEndpoint,
+    required this.clientId,
+    required this.scopes,
+    required this.redirectUri,
+    required this.onCancelled,
+    required this.onError,
+    required this.onCredentials,
+    this.child,
+    this.onUserInfo,
+    this.authorizeEndpointTransformer,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthCodeWebViewBloc>(
       create: (_) => AuthCodeWebViewBloc(
-        authority: authority,
+        authority: discoveryEndpoint,
         clientId: clientId,
         scopes: scopes,
         redirectCallbackUrl: redirectUri,

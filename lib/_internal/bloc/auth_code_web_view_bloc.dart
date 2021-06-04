@@ -10,19 +10,20 @@ part 'auth_code_web_view_state.dart';
 
 class AuthCodeWebViewBloc
     extends Bloc<AuthCodeWebViewEvent, AuthCodeWebViewState> {
-  final Uri authority;
+  final Uri discoveryEndpoint;
   final String clientId;
   final List<String> scopes;
   final Uri redirectCallbackUrl;
   final Uri Function(Uri)? authorizeEndpointTransformer;
-  late final AuthCodeManager authCodeManager = AuthCodeManager(authority);
-  AuthCodeWebViewBloc(
-      {required this.authority,
-      required this.clientId,
-      required this.scopes,
-      required this.redirectCallbackUrl,
-      this.authorizeEndpointTransformer})
-      : super(AuthCodeWebViewInitial());
+  late final AuthCodeManager authCodeManager =
+      AuthCodeManager(discoveryEndpoint);
+  AuthCodeWebViewBloc({
+    required this.discoveryEndpoint,
+    required this.clientId,
+    required this.scopes,
+    required this.redirectCallbackUrl,
+    this.authorizeEndpointTransformer,
+  }) : super(AuthCodeWebViewInitial());
 
   @override
   Stream<AuthCodeWebViewState> mapEventToState(
