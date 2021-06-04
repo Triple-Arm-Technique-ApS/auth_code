@@ -70,7 +70,7 @@ class AuthCodeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<AuthCodeWebViewBloc>(
       create: (_) => AuthCodeWebViewBloc(
-        authority: discoveryEndpoint,
+        discoveryEndpoint: discoveryEndpoint,
         clientId: clientId,
         scopes: scopes,
         redirectCallbackUrl: redirectUri,
