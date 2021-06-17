@@ -6,20 +6,17 @@ import 'package:http/http.dart' as http;
 import 'http_exception.dart';
 
 class IdentityServer {
-  final Uri authority;
+  final Uri discoveryEndpoint;
 
   DiscoveryDocument? _discoveryDocument;
 
-  IdentityServer(this.authority);
+  IdentityServer(this.discoveryEndpoint);
 
   bool get isInitialized => _discoveryDocument != null;
   DiscoveryDocument? get discoveryDocument => _discoveryDocument;
 
   Future<void> init() async {
-    final endpoint = authority.resolveUri(
-      Uri.parse('.well-known/openid-configuration'),
-    );
-    final response = await http.get(endpoint);
+    final response = await http.get(discoveryEndpoint);
     if (response.statusCode < 200 && response.statusCode > 299) {
       throw HttpException(
           response.statusCode, response.reasonPhrase, response.body);
