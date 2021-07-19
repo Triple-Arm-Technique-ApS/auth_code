@@ -131,7 +131,7 @@ class AuthCodeView extends StatelessWidget {
 
   bool matches(Uri uri, Uri other) {
     final one = uri.toString().split('?')[0].toLowerCase();
-    final two = uri.toString().split('?')[0].toLowerCase();
+    final two = other.toString().split('?')[0].toLowerCase();
     return one == two;
   }
 }
