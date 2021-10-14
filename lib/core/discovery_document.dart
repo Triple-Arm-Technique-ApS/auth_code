@@ -3,12 +3,13 @@ class DiscoveryDocument {
   final Uri authorizationEndpoint;
   final Uri tokenEndpoint;
   final Uri? userinfoEndpoint;
-
+  final Uri? endSessionEndpoint;
   DiscoveryDocument({
     required this.issuer,
     required this.authorizationEndpoint,
     required this.tokenEndpoint,
     this.userinfoEndpoint,
+    this.endSessionEndpoint,
   });
 
   factory DiscoveryDocument.fromJson(Map<String, dynamic> json) {
@@ -19,6 +20,9 @@ class DiscoveryDocument {
       tokenEndpoint: Uri.parse(json['token_endpoint'] as String),
       userinfoEndpoint: json.containsKey('userinfo_endpoint')
           ? Uri.parse(json['userinfo_endpoint'] as String)
+          : null,
+      endSessionEndpoint: json.containsKey('end_session_endpoint')
+          ? Uri.parse(json['end_session_endpoint'] as String)
           : null,
     );
   }
