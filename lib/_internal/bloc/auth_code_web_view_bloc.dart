@@ -1,24 +1,25 @@
 import 'dart:async';
 
-import 'package:auth_code_view/core/core.dart';
+import 'package:auth_code/auth_code_options.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:oauth2/oauth2.dart';
+
+import '../../auth_code_view.dart';
 
 part 'auth_code_web_view_event.dart';
 part 'auth_code_web_view_state.dart';
 
 class AuthCodeWebViewBloc
     extends Bloc<AuthCodeWebViewEvent, AuthCodeWebViewState> {
-  final Uri discoveryEndpoint;
+  final AuthCodeOptions options;
   final String clientId;
   final List<String> scopes;
   final Uri redirectCallbackUrl;
   final Uri Function(Uri)? authorizeEndpointTransformer;
-  late final AuthCodeManager authCodeManager =
-      AuthCodeManager(discoveryEndpoint);
+  late final AuthCodeManager authCodeManager = AuthCodeManager(options);
   AuthCodeWebViewBloc({
-    required this.discoveryEndpoint,
+    required this.options,
     required this.clientId,
     required this.scopes,
     required this.redirectCallbackUrl,
