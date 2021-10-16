@@ -1,12 +1,12 @@
-library auth_code_view;
-
 export 'core/core.dart';
+import 'package:auth_code/auth_code_options.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oauth2/oauth2.dart';
 
 import '_internal/auth_code_simplified/index.dart';
 import '_internal/bloc/auth_code_web_view_bloc.dart';
+import 'auth_code.dart';
 
 /// Base class for errors that can occure while logging in.
 abstract class AuthCodeWebViewError {}
@@ -41,20 +41,30 @@ class CallbackError extends AuthCodeWebViewError {
   CallbackError(this.error, this.description, this.uri);
 }
 
+typedef OnCancelledCallback = void Function();
+
+typedef OnCredentialsCallback = void Function(Credentials);
+
+typedef OnAuthCodeErrorCallback = void Function(AuthCodeWebViewError);
+
+typedef OnUserInfoCallback = void Function(Map<String, dynamic> user);
+
+typedef AuthorizationEndpointTransformer = Uri Function(Uri);
+
 class AuthCodeView extends StatelessWidget {
-  final Uri discoveryEndpoint;
+  final AuthCodeOptions options;
   final String clientId;
   final List<String> scopes;
   final Uri redirectUri;
-  final void Function() onCancelled;
-  final void Function(AuthCodeWebViewError) onError;
-  final void Function(Credentials credentials) onCredentials;
-  final void Function(Map<String, dynamic> user)? onUserInfo;
-  final Uri Function(Uri)? authorizeEndpointTransformer;
+  final OnCancelledCallback onCancelled;
+  final OnAuthCodeErrorCallback onError;
+  final OnCredentialsCallback onCredentials;
+  final OnUserInfoCallback? onUserInfo;
+  final AuthorizationEndpointTransformer? authorizeEndpointTransformer;
   final Widget? child;
   const AuthCodeView({
     Key? key,
-    required this.discoveryEndpoint,
+    required this.options,
     required this.clientId,
     required this.scopes,
     required this.redirectUri,
@@ -70,7 +80,7 @@ class AuthCodeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<AuthCodeWebViewBloc>(
       create: (_) => AuthCodeWebViewBloc(
-        discoveryEndpoint: discoveryEndpoint,
+        options: options,
         clientId: clientId,
         scopes: scopes,
         redirectCallbackUrl: redirectUri,
@@ -123,7 +133,7 @@ class AuthCodeView extends StatelessWidget {
               child: child,
             );
           }
-          return Container();
+          return const SizedBox();
         },
       ),
     );
@@ -133,5 +143,28 @@ class AuthCodeView extends StatelessWidget {
     final one = uri.toString().split('?')[0].toLowerCase();
     final two = other.toString().split('?')[0].toLowerCase();
     return one == two;
+  }
+
+  factory AuthCodeView.withAuthCode(
+      {required BuildContext context,
+      required OnCancelledCallback onCancelled,
+      required OnAuthCodeErrorCallback onError,
+      OnUserInfoCallback? onUserInfo,
+      AuthorizationEndpointTransformer? authorizeEndpointTransformer,
+      Widget? child}) {
+    final notifier = AuthCode.of(context);
+
+    return AuthCodeView(
+      options: notifier.options,
+      clientId: notifier.clientId,
+      scopes: notifier.scope,
+      redirectUri: notifier.callbackredirectUri,
+      onCancelled: onCancelled,
+      onError: onError,
+      onCredentials: (credentials) => AuthCode.of(context).signIn(credentials),
+      authorizeEndpointTransformer: authorizeEndpointTransformer,
+      onUserInfo: onUserInfo,
+      child: child,
+    );
   }
 }

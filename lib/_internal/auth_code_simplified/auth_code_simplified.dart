@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'signout_result.dart';
-
 class AuthCodeSimplified extends StatelessWidget {
   final Uri authorizationEndpoint;
   final bool Function(Uri uri) callbackHandler;
@@ -53,15 +51,5 @@ class AuthCodeSimplified extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-class AuthCodeSignOut {
-  final Uri endSessionEndpoint;
-
-  AuthCodeSignOut(this.endSessionEndpoint);
-
-  Future<SignOutResult> signOut() {
-    return SynchronousFuture(SignOutResult.successful());
   }
 }
