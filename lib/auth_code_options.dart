@@ -51,7 +51,7 @@ class AuthCodeOptionsNotifier extends ChangeNotifier {
     _options = AuthCodeOptions(
       document.authorizationEndpoint,
       document.endSessionEndpoint,
-      document.endSessionEndpoint,
+      document.userinfoEndpoint,
       document.tokenEndpoint,
     );
     notifyListeners();
