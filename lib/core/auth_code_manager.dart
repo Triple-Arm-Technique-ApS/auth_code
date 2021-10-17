@@ -1,10 +1,10 @@
+import 'package:auth_code/auth_code_options.dart';
 import 'package:oauth2/oauth2.dart';
 
 import 'identity_server.dart';
 
 class AuthCodeManager {
-  final Uri _authority;
-
+  final AuthCodeOptions _options;
   Client? _client;
 
   bool get _isInitialized => _grant != null;
@@ -13,29 +13,26 @@ class AuthCodeManager {
 
   AuthorizationCodeGrant? _grant;
 
-  late IdentityServer _identityServer = IdentityServer(_authority);
+  late IdentityServer _identityServer = IdentityServer(_options);
 
-  AuthCodeManager(this._authority);
+  AuthCodeManager(this._options);
 
-  Future<void> init(String clientId) async {
-    if (!_identityServer.isInitialized) {
-      await _identityServer.init();
-    }
-    final authorizationEndpoint =
-        _identityServer.discoveryDocument!.authorizationEndpoint;
-    final tokenEndpoint = _identityServer.discoveryDocument!.tokenEndpoint;
-    _grant =
-        AuthorizationCodeGrant(clientId, authorizationEndpoint, tokenEndpoint);
+  void init() {
+    _grant = AuthorizationCodeGrant(
+      _options.clientId,
+      _options.authorizationEndpoint,
+      _options.tokenEndpoint,
+    );
   }
 
-  Uri createAuthorizeEndpoint({
-    required List<String> scopes,
-    required Uri redirectCallbackUrl,
-  }) {
-    if (!_identityServer.isInitialized) {
-      throw Exception('init must be called prior to createAuthorizeEndpoint.');
+  Uri createAuthorizeEndpoint() {
+    if (!_isInitialized) {
+      init();
     }
-    return _grant!.getAuthorizationUrl(redirectCallbackUrl, scopes: scopes);
+    return _grant!.getAuthorizationUrl(
+      _options.redirectUri,
+      scopes: _options.scope,
+    );
   }
 
   Future<Credentials> createCredentialsFromCallback(Uri callback) async {
@@ -57,6 +54,5 @@ class AuthCodeManager {
     return await _identityServer.getUserInfo(_client!.credentials.accessToken);
   }
 
-  bool get hasUserInfoEndpoint =>
-      _identityServer.discoveryDocument?.userinfoEndpoint != null;
+  bool get hasUserInfoEndpoint => _options.userInfoEndpoint != null;
 }
