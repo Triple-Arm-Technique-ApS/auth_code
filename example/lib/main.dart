@@ -1,4 +1,3 @@
-import 'package:auth_code/auth_code_view.dart';
 import 'package:flutter/material.dart';
 import 'package:auth_code/auth_code.dart';
 import 'package:auth_code/auth_code_options.dart';
@@ -29,39 +28,44 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: AuthCodeOptionsProvider.fromWellKnownConfiguration(
+          clientId: '4d9feb2f-7960-4155-8281-622bb4561fa2',
+          scope: const [
+            'https://tattestb2c.onmicrosoft.com/349da660-8ead-4e8e-b637-ad295a3e9e54/self.write',
+            'https://tattestb2c.onmicrosoft.com/349da660-8ead-4e8e-b637-ad295a3e9e54/self.write',
+          ],
+          redirectUri: Uri.parse(
+            'http://localhost:4200/callback.html',
+          ),
           wellKnownConfigurationEndpoint: Uri.parse(
-              'https://tattestb2c.b2clogin.com/tattestb2c.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN/v2.0/.well-known/openid-configuration'),
+            'https://tattestb2c.b2clogin.com/tattestb2c.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN/v2.0/.well-known/openid-configuration',
+          ),
           child: Builder(builder: (context) {
             return AuthCodeOptionsProvider.of(context).initializing
-                ? Center(
+                ? const Center(
                     child: Text('HDSAJHDASKLJhdsa'),
                   )
                 : AuthCode(
                     options: AuthCodeOptionsProvider.of(context).options,
-                    clientId: '4d9feb2f-7960-4155-8281-622bb4561fa2',
-                    scope: const [
-                      'https://tattestb2c.onmicrosoft.com/349da660-8ead-4e8e-b637-ad295a3e9e54/self.write',
-                      'https://tattestb2c.onmicrosoft.com/349da660-8ead-4e8e-b637-ad295a3e9e54/self.write',
-                    ],
-                    callbackredirectUri:
-                        Uri.parse('http://localhost:4200/callback.html'),
                     signedOut: () {},
-                    child: Builder(builder: (context) {
-                      return AuthCode.of(context).authenticated
-                          ? Center(
-                              child: ElevatedButton(
-                                child: const Text('SIGN OUT'),
-                                onPressed: () => AuthCode.of(context).signOut(),
-                              ),
-                            )
-                          : AuthCodeView.withAuthCode(
-                              context: context,
-                              onCancelled: () {
-                                /// TODO: print somthing
-                              },
-                              onError: (err) {},
-                            );
-                    }),
+                    child: Builder(
+                      builder: (context) {
+                        return AuthCode.of(context).authenticated
+                            ? Center(
+                                child: ElevatedButton(
+                                  child: const Text('SIGN OUT'),
+                                  onPressed: () =>
+                                      AuthCode.of(context).signOut(),
+                                ),
+                              )
+                            : AuthCodeView(
+                                onCredentials: (c) {},
+                                onCancelled: () {
+                                  /// TODO: print somthing
+                                },
+                                onError: (err) {},
+                              );
+                      },
+                    ),
                   );
           }),
         ),

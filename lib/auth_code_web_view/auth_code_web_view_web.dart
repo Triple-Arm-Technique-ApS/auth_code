@@ -1,15 +1,14 @@
+import 'package:auth_code/web_util/external_browser_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../web_util/external_browser_window.dart';
-
-class AuthCodeSimplified extends StatefulWidget {
+class AuthCodeWebView extends StatefulWidget {
   final Uri authorizationEndpoint;
   final bool Function(Uri uri) callbackHandler;
   final void Function() onCancelled;
   final void Function() onError;
   final Widget? child;
-  const AuthCodeSimplified({
+  const AuthCodeWebView({
     Key? key,
     required this.authorizationEndpoint,
     required this.callbackHandler,
@@ -19,10 +18,10 @@ class AuthCodeSimplified extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AuthCodeSimplifiedState createState() => _AuthCodeSimplifiedState();
+  _AuthCodeWebViewState createState() => _AuthCodeWebViewState();
 }
 
-class _AuthCodeSimplifiedState extends State<AuthCodeSimplified> {
+class _AuthCodeWebViewState extends State<AuthCodeWebView> {
   @override
   void initState() {
     super.initState();
