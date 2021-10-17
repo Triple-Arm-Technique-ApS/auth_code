@@ -10,15 +10,16 @@ part 'auth_code_view_state.dart';
 
 class AuthCodeViewBloc extends Bloc<AuthCodeViewEvent, AuthCodeViewState> {
   final AuthCodeOptions options;
-  AuthCodeManager get authCodeManager => AuthCodeManager(options);
-  AuthCodeViewBloc(this.options)
-      : super(
-          AuthCodeWebViewInitial(
-            AuthCodeManager(options).createAuthorizeEndpoint(),
-          ),
-        ) {
+  final AuthCodeManager authCodeManager;
+  AuthCodeViewBloc(
+    this.options,
+  )   : authCodeManager = AuthCodeManager(options),
+        super(AuthCodeViewInitial()) {
     on<AuthCodeViewEvent>(
       (event, emit) async {
+        if (event is AuthCodeViewLoadedRequestedEvent) {
+          emit(AuthCodeViewLoaded(authCodeManager.createAuthorizeEndpoint()));
+        }
         if (event is HandleCallbackEvent) {
           emit(HandlingCallback());
           try {

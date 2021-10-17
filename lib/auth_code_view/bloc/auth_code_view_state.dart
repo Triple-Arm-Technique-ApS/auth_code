@@ -3,10 +3,11 @@ part of 'auth_code_view_bloc.dart';
 @immutable
 abstract class AuthCodeViewState {}
 
-class AuthCodeWebViewInitial extends AuthCodeViewState {
-  final Uri authorizationEndpoint;
+class AuthCodeViewInitial extends AuthCodeViewState {}
 
-  AuthCodeWebViewInitial(this.authorizationEndpoint);
+class AuthCodeViewLoaded extends AuthCodeViewState {
+  final Uri authorizationEndpoint;
+  AuthCodeViewLoaded(this.authorizationEndpoint);
 }
 
 class FetchingUserInfo extends AuthCodeViewState {}

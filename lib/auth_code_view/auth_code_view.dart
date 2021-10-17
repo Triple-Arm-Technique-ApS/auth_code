@@ -69,7 +69,8 @@ class AuthCodeView extends StatelessWidget {
     final AuthCodeOptions options =
         AuthCodeOptionsProvider.of(context).options!;
     return BlocProvider<AuthCodeViewBloc>(
-      create: (_) => AuthCodeViewBloc(options),
+      create: (_) =>
+          AuthCodeViewBloc(options)..add(AuthCodeViewLoadedRequestedEvent()),
       child: BlocConsumer<AuthCodeViewBloc, AuthCodeViewState>(
         listener: (context, state) {
           if (state is FetchingUserInfoFailed) {
@@ -96,7 +97,7 @@ class AuthCodeView extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is AuthCodeWebViewInitial) {
+          if (state is AuthCodeViewLoaded) {
             return AuthCodeWebView(
               authorizationEndpoint: authorizationEndpointTransformer == null
                   ? state.authorizationEndpoint
