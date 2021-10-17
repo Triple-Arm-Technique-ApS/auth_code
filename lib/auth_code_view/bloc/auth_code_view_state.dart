@@ -1,33 +1,28 @@
-part of 'auth_code_web_view_bloc.dart';
+part of 'auth_code_view_bloc.dart';
 
 @immutable
-abstract class AuthCodeWebViewState {}
+abstract class AuthCodeViewState {}
 
-class AuthCodeWebViewInitial extends AuthCodeWebViewState {}
+class AuthCodeViewInitial extends AuthCodeViewState {}
 
-class FetchingDiscoveryDocument extends AuthCodeWebViewState {}
-
-class FetchingDiscoveryDocumentSucceeded extends AuthCodeWebViewState {
+class AuthCodeViewLoaded extends AuthCodeViewState {
   final Uri authorizationEndpoint;
-
-  FetchingDiscoveryDocumentSucceeded(this.authorizationEndpoint);
+  AuthCodeViewLoaded(this.authorizationEndpoint);
 }
 
-class FetchingDiscoveryDocumentFailed extends AuthCodeWebViewState {}
+class FetchingUserInfo extends AuthCodeViewState {}
 
-class FetchingUserInfo extends AuthCodeWebViewState {}
-
-class FetchingUserInfoSucceeded extends AuthCodeWebViewState {
+class FetchingUserInfoSucceeded extends AuthCodeViewState {
   final Map<String, dynamic> user;
 
   FetchingUserInfoSucceeded(this.user);
 }
 
-class FetchingUserInfoFailed extends AuthCodeWebViewState {}
+class FetchingUserInfoFailed extends AuthCodeViewState {}
 
-class HandlingCallback extends AuthCodeWebViewState {}
+class HandlingCallback extends AuthCodeViewState {}
 
-class HandlingCallbackFailed extends AuthCodeWebViewState {
+class HandlingCallbackFailed extends AuthCodeViewState {
   /// The name of the error.
   ///
   /// Possible names are enumerated in [the spec][].
@@ -53,7 +48,7 @@ class HandlingCallbackFailed extends AuthCodeWebViewState {
   });
 }
 
-class HandlingCallbackSucceeded extends AuthCodeWebViewState {
+class HandlingCallbackSucceeded extends AuthCodeViewState {
   final Credentials credentials;
 
   HandlingCallbackSucceeded(this.credentials);

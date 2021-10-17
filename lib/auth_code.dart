@@ -9,20 +9,16 @@ import 'package:oauth2/oauth2.dart';
 
 import 'auth_code_options.dart';
 
+export 'auth_code_view/auth_code_view.dart';
+
 class AuthCodeNotifier extends ChangeNotifier {
   Credentials? _credentials;
   StreamSubscription? _subscription;
 
   final AuthCodeOptions options;
-  final String clientId;
-  final List<String> scope;
-  final Uri callbackredirectUri;
   final VoidCallback signedOut;
   AuthCodeNotifier(
     this.options,
-    this.clientId,
-    this.scope,
-    this.callbackredirectUri,
     this.signedOut,
   );
 
@@ -38,7 +34,7 @@ class AuthCodeNotifier extends ChangeNotifier {
     if (options.endSessionEndpoint != null) {
       signOutOnIdentityProvider(
         endSessionEndpoint: options.endSessionEndpoint!,
-        redirectCallback: callbackredirectUri,
+        redirectCallback: options.redirectUri,
         onComplete: () {
           _subscription?.cancel();
           _credentials = null;
@@ -94,9 +90,6 @@ class AuthCodeNotifier extends ChangeNotifier {
 class AuthCode extends InheritedNotifier<AuthCodeNotifier> {
   AuthCode({
     required AuthCodeOptions options,
-    required String clientId,
-    required List<String> scope,
-    required Uri callbackredirectUri,
     required Widget child,
     required VoidCallback signedOut,
     Key? key,
@@ -104,9 +97,6 @@ class AuthCode extends InheritedNotifier<AuthCodeNotifier> {
           key: key,
           notifier: AuthCodeNotifier(
             options,
-            clientId,
-            scope,
-            callbackredirectUri,
             signedOut,
           ),
           child: child,

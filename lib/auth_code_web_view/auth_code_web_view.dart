@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class AuthCodeSimplified extends StatelessWidget {
+class AuthCodeWebView extends StatelessWidget {
   final Uri authorizationEndpoint;
   final bool Function(Uri uri) callbackHandler;
   final void Function() onCancelled;
   final void Function() onError;
   final Widget? child;
-  const AuthCodeSimplified(
+  const AuthCodeWebView(
       {Key? key,
       required this.authorizationEndpoint,
       required this.callbackHandler,

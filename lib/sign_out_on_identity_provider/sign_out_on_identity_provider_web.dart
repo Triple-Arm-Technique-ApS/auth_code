@@ -1,4 +1,4 @@
-import 'package:auth_code/_internal/web_util/external_browser_window.dart';
+import 'package:auth_code/web_util/external_browser_window.dart';
 import 'package:flutter/foundation.dart';
 
 /// [signout] begins a sign out flow and does so diffrently on web than other platforms

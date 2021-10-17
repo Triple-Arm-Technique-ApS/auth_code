@@ -17,19 +17,22 @@ class AuthCodeManager {
 
   AuthCodeManager(this._options);
 
-  Future<void> init(String clientId) async {
+  void init() {
     _grant = AuthorizationCodeGrant(
-      clientId,
+      _options.clientId,
       _options.authorizationEndpoint,
       _options.tokenEndpoint,
     );
   }
 
-  Uri createAuthorizeEndpoint({
-    required List<String> scopes,
-    required Uri redirectCallbackUrl,
-  }) {
-    return _grant!.getAuthorizationUrl(redirectCallbackUrl, scopes: scopes);
+  Uri createAuthorizeEndpoint() {
+    if (!_isInitialized) {
+      init();
+    }
+    return _grant!.getAuthorizationUrl(
+      _options.redirectUri,
+      scopes: _options.scope,
+    );
   }
 
   Future<Credentials> createCredentialsFromCallback(Uri callback) async {
