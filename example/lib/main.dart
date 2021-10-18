@@ -39,35 +39,37 @@ class MyApp extends StatelessWidget {
           wellKnownConfigurationEndpoint: Uri.parse(
             'https://tattestb2c.b2clogin.com/tattestb2c.onmicrosoft.com/B2C_1A_SIGNUP_SIGNIN/v2.0/.well-known/openid-configuration',
           ),
-          child: Builder(builder: (context) {
-            return AuthCodeOptionsProvider.of(context).initializing
-                ? const Center(
-                    child: Text('HDSAJHDASKLJhdsa'),
-                  )
-                : AuthCode(
-                    options: AuthCodeOptionsProvider.of(context).options,
-                    signedOut: () {},
-                    child: Builder(
-                      builder: (context) {
-                        return AuthCode.of(context).authenticated
-                            ? Center(
-                                child: ElevatedButton(
-                                  child: const Text('SIGN OUT'),
-                                  onPressed: () =>
-                                      AuthCode.of(context).signOut(),
-                                ),
-                              )
-                            : AuthCodeView(
-                                onCredentials: (c) {},
-                                onCancelled: () {
-                                  /// TODO: print somthing
-                                },
-                                onError: (err) {},
-                              );
-                      },
-                    ),
-                  );
-          }),
+          child: Builder(
+            builder: (context) {
+              return AuthCodeOptionsProvider.of(context).initializing
+                  ? const Center(
+                      child: Text('HDSAJHDASKLJhdsa'),
+                    )
+                  : AuthCode(
+                      options: AuthCodeOptionsProvider.of(context).options,
+                      signedOut: () {},
+                      child: Builder(
+                        builder: (context) {
+                          return AuthCode.of(context).authenticated
+                              ? Center(
+                                  child: ElevatedButton(
+                                    child: const Text('SIGN OUT'),
+                                    onPressed: () =>
+                                        AuthCode.of(context).signOut(),
+                                  ),
+                                )
+                              : AuthCodeView(
+                                  onCredentials: (c) {},
+                                  onCancelled: () {
+                                    /// TODO: print somthing
+                                  },
+                                  onError: (err) {},
+                                );
+                        },
+                      ),
+                    );
+            },
+          ),
         ),
       ),
     );

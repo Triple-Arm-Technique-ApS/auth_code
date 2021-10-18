@@ -30,10 +30,27 @@ class AuthCodeNotifier extends ChangeNotifier {
     _listen();
   }
 
+  Uri? _buildEndSessionEndpoint() {
+    if (_credentials?.idToken != null) {
+      return options.endSessionEndpoint?.replace(
+        queryParameters: Map<String, String>.from(
+            options.endSessionEndpoint!.queryParameters)
+          ..addAll(
+            {
+              'token_hint': _credentials!.idToken!,
+            },
+          ),
+      );
+    } else {
+      return options.endSessionEndpoint;
+    }
+  }
+
   void signOut() {
-    if (options.endSessionEndpoint != null) {
+    final endSessionEndpoint = _buildEndSessionEndpoint();
+    if (endSessionEndpoint != null) {
       signOutOnIdentityProvider(
-        endSessionEndpoint: options.endSessionEndpoint!,
+        endSessionEndpoint: endSessionEndpoint,
         redirectCallback: options.redirectUri,
         onComplete: () {
           _subscription?.cancel();
