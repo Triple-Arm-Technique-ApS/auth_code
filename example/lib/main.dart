@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
           scope: const [
             'https://tattestb2c.onmicrosoft.com/349da660-8ead-4e8e-b637-ad295a3e9e54/self.write',
             'https://tattestb2c.onmicrosoft.com/349da660-8ead-4e8e-b637-ad295a3e9e54/self.write',
+            'openid',
           ],
           redirectUri: Uri.parse(
             'http://localhost:4200/callback.html',
@@ -58,6 +59,17 @@ class MyApp extends StatelessWidget {
                                 ),
                               )
                             : AuthCodeView(
+                                authorizationEndpointTransformer: (uri) =>
+                                    uri.replace(
+                                  queryParameters: Map<String, String>.from(
+                                      uri.queryParameters)
+                                    ..addAll(
+                                      {
+                                        'response_mode': 'query',
+                                        'response_type': 'code id_token',
+                                      },
+                                    ),
+                                ),
                                 onCredentials: (c) {},
                                 onCancelled: () {
                                   /// TODO: print somthing

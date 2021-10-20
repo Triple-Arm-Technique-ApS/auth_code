@@ -42,6 +42,7 @@ class AuthCodeNotifier extends ChangeNotifier {
         },
         onCancelled: () {},
         onFailed: () {},
+        idToken: _credentials?.idToken,
       );
     } else {
       _subscription?.cancel();

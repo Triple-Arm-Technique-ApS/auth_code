@@ -98,11 +98,23 @@ class AuthCodeView extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is AuthCodeViewLoaded) {
+            var authorizationEndpoint = authorizationEndpointTransformer == null
+                ? state.authorizationEndpoint
+                : authorizationEndpointTransformer!(
+                    state.authorizationEndpoint);
+            // response mode should always be query not fragment
+            authorizationEndpoint = authorizationEndpoint.replace(
+              queryParameters: Map<String, String>.from(
+                  authorizationEndpoint.queryParameters)
+                ..addAll(
+                  {
+                    'response_mode': 'query',
+                    'response_type': 'code id_token',
+                  },
+                ),
+            );
             return AuthCodeWebView(
-              authorizationEndpoint: authorizationEndpointTransformer == null
-                  ? state.authorizationEndpoint
-                  : authorizationEndpointTransformer!(
-                      state.authorizationEndpoint),
+              authorizationEndpoint: authorizationEndpoint,
               callbackHandler: (url) {
                 if (matches(options.redirectUri, url)) {
                   context
@@ -124,8 +136,8 @@ class AuthCodeView extends StatelessWidget {
   }
 
   bool matches(Uri uri, Uri other) {
-    final one = uri.toString().split('?')[0].toLowerCase();
-    final two = other.toString().split('?')[0].toLowerCase();
+    final one = '${uri.origin}${uri.path}';
+    final two = '${other.origin}${uri.path}';
     return one == two;
   }
 }

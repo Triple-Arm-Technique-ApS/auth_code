@@ -17,6 +17,7 @@ void signOutOnIdentityProvider({
   required VoidCallback onComplete,
   required VoidCallback onCancelled,
   required VoidCallback onFailed,
+  String? idToken = null,
 }) {
   ExternalBrowserWindow.open(
     onClosed: onCancelled,
@@ -31,6 +32,7 @@ void signOutOnIdentityProvider({
             ..addAll(
               {
                 'post_logout_redirect_uri': redirectCallback.toString(),
+                if (idToken != null) 'id_token_hint': idToken
               },
             ),
     ),

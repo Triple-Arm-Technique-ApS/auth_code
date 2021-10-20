@@ -16,6 +16,7 @@ void signOutOnIdentityProvider({
   required VoidCallback onComplete,
   required VoidCallback onCancelled,
   required VoidCallback onFailed,
+  String? idToken = null,
 }) {
   onComplete();
 }
